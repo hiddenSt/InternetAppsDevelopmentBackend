@@ -10,10 +10,10 @@ services:
       - POSTGRES_DB=labs
 
   labs-service:
-    image: php:7.4-fpm-alpine
     build:
       context: .
       dockerfile: Dockerfile
+    command: php bin/console server:run 0.0.0.0:8088
     ports:
       - "8088:8088"
     depends_on:

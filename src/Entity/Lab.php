@@ -23,19 +23,21 @@ class Lab
     private $name;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $mark;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\ManyToOne(targetEntity=Person::class)
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $deadline;
+    private $student;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\ManyToOne(targetEntity=Person::class)
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $releaseDate;
+    private $teacher;
 
     public function getId(): ?int
     {
@@ -66,26 +68,26 @@ class Lab
         return $this;
     }
 
-    public function getDeadline(): ?\DateTimeInterface
+    public function getStudent(): ?Person
     {
-        return $this->deadline;
+        return $this->student;
     }
 
-    public function setDeadline(\DateTimeInterface $deadline): self
+    public function setStudent(?Person $student): self
     {
-        $this->deadline = $deadline;
+        $this->student = $student;
 
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTimeInterface
+    public function getTeacher(): ?Person
     {
-        return $this->releaseDate;
+        return $this->teacher;
     }
 
-    public function setReleaseDate(?\DateTimeInterface $releaseDate): self
+    public function setTeacher(?Person $teacher): self
     {
-        $this->releaseDate = $releaseDate;
+        $this->teacher = $teacher;
 
         return $this;
     }
