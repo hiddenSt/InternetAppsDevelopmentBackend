@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  database:
+    image: postgres
+    container_name: labs_service_db
+    environment:
+      - POSTGRES_USER: user
+      - POSTGRES_PASSWORD: password
+      - POSTGRES_DB: labs
+
+  labs-service:
+    image: php:7.4-fpm-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8088:8088"
