@@ -14,6 +14,8 @@ services:
       context: .
       dockerfile: Dockerfile
     command: php bin/console server:run 0.0.0.0:8088
+    volumes:
+      - ".:/app"
     ports:
       - "8088:8088"
     depends_on:

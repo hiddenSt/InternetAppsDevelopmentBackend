@@ -33,7 +33,8 @@ class PersonController extends AbstractController
 	$new_person->setSecondName($request->request->get('secondName'));
 	$new_person->setGender($request->request->get('gender'));
 	
-	# $personManager->persist($new_person);
+	$personManager->persist($new_person);
+	$personManager->flush();
 	return $this->json($request);
     }
 }
