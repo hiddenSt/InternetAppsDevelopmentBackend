@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Person;
 
 class PersonController extends AbstractController
@@ -18,7 +19,14 @@ class PersonController extends AbstractController
 	{
 		$persons = $this->getDoctrine()->getRepository(Person::class)->findAll();
 
-		return $this->json($persons, Response::HTTP_OK);
+		$persons_arr = [];
+
+		foreach ($persons as $person) {
+			$array_record = ['first_name' => $person->getFirstName(), 'second_name' => $person->getSecondName(), 'gender' => $person->getGender()];
+			array_push($persons_arr, $array_record);
+		}
+
+		return $this->json($persons_arr, Response::HTTP_OK);
 	}
 
 	/**
@@ -26,16 +34,33 @@ class PersonController extends AbstractController
 	 */
 	public function create(Request $request): Response
 	{
-		$personManager = $this->getDoctrine()->getManager();
+		if (!$request->request->get('first_name')) {
+			return $this->json(['message' => 'field \'first_name\' is required.'], Response::HTTP_BAD_REQUEST);
+		}
+
+		if (!$request->request->get('second_name')) {
+			return $this->json(['message' => 'field \'second_name\' is required.'], Response::HTTP_BAD_REQUEST);
+		}
+
+		if (!$request->request->get('gender')) {
+			return $this->json(['message' => 'field \'gender\' is required.'], Response::HTTP_BAD_REQUEST);
+		}
 
 		$new_person = new Person();
-		$new_person->setFirstName($request->request->get('firstName'));
-		$new_person->setSecondName($request->request->get('secondName'));
+		$new_person->setFirstName($request->request->get('first_name'));
+		$new_person->setSecondName($request->request->get('second_name'));
 		$new_person->setGender($request->request->get('gender'));
 
+		$personManager = $this->getDoctrine()->getManager();
 		$personManager->persist($new_person);
 		$personManager->flush();
-		return $this->json($request);
+
+		return $this->json([
+			'id' => $new_person->getId(),
+			'first_name' => $new_person->getFirstName(),
+			'second_name' => $new_person->getSecondName(),
+			'gender' => $new_person->getGender()
+ 		], Response::HTTP_CREATED);
 	}
 
 	/**
@@ -43,7 +68,34 @@ class PersonController extends AbstractController
 	 */
 	public function update(int $id, Request $request)
 	{
+		$person = $this->getDoctrine()->getRepository(Person::class)->find($id);
 
+		if (!$person) {
+			return $this->json(['message' => 'Can not find person with given id'], Response::HTTP_NOT_FOUND);
+		}
+
+		if ($request->request->get('first_name')) {
+			$person->setFirstName($request->request->get('first_name'));
+		}
+
+		if ($request->request->get('second_name')) {
+			$person->setSecondName($request->request->get('second_name'));
+		}
+
+		if ($request->request->get('gender')) {
+			$person->setGender($request->request->get('gender'));
+		}
+
+		$personManager = $this->getDoctrine()->getManager();
+		$personManager->persist($person);
+		$personManager->flush();
+
+		return $this->json([
+			'id' => $person->getId(),
+			'first_name' => $person->getFirstName(),
+			'second_name' => $person->getSecondName(),
+			'gender' => $person->getGender()
+		], Response::HTTP_OK);
 	}
 
 	/**
@@ -53,9 +105,8 @@ class PersonController extends AbstractController
 	{
 		$person = $this->getDoctrine()->getRepository(Person::class)->find($id);
 
-		if ($person == null)  {
-			return $this->json(["message" => "Object with given attributes doesn't exist"], Response::HTTP_BAD_REQUEST);
-
+		if (!$person) {
+			return $this->json(['message' => 'Object with given attributes doesn\'t exist'], Response::HTTP_BAD_REQUEST);
 		}
 
 		$this->getDoctrine()->getManager()->remove($person);

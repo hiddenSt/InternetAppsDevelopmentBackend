@@ -8,6 +8,7 @@ class PersonTest extends ApiTestCase
 {
 	public function testCreatePerson(): void
 	{
+		$client  = static::createClient();
 		$response = static::createClient()->request('GET', '/');
 
 		$this->assertResponseIsSuccessful();

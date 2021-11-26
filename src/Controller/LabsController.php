@@ -45,7 +45,7 @@ class LabsController extends AbstractController
 	*/
 	public function update(int $id, Request $request): Response
 	{
-		// TODO:
+		return $this->json(["name" => "Hello world"]);
 	}
 
 	/**
