@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Lab;
+use App\Entity\Person;
 
 class LabsController extends AbstractController
 {
@@ -16,9 +17,16 @@ class LabsController extends AbstractController
 	*/
 	public function index(): Response
 	{
-		$labs = $this->getDoctrine()->getManager()->getRepository(Lab::class)->findAll();
+		$labs = $this->getDoctrine()->getRepository(Lab::class)->findAll();
 
-		return $this->json($labs, Response::HTTP_OK);
+		$labs_arr = [];
+
+		foreach ($labs as $lab) {
+			$lab = ['id' => $lab->getId(), 'name' => $lab->getName(), 'mark' => $lab->getMark()];
+			array_push($labs_arr, $lab);
+		}
+
+		return $this->json($labs_arr, Response::HTTP_OK);
 	}
 
 	/** 
@@ -26,13 +34,40 @@ class LabsController extends AbstractController
 	*/
 	public function create(Request $request): Response
 	{
+		if (!$request->request->get('name')) {
+			return $this->json(['message' => 'field \'name\' is required.'], Response::HTTP_BAD_REQUEST);
+		}
+
+		if (!$request->request->get('mark')) {
+			return $this->json(['message' => 'field \'mark\' is required.'], Response::HTTP_BAD_REQUEST);
+		}
+
+		if (!$request->request->get('teacher_id')) {
+			return $this->json(['message' => 'field \'teacher_id\' is required.'], Response::HTTP_BAD_REQUEST);
+		}
+
+		if (!$request->request->get('student_id')) {
+			return $this->json(['message' => 'field \'student_id\' is required.'], Response::HTTP_BAD_REQUEST);
+		}
+
 		$entityManager = $this->getDoctrine()->getManager();
+		$persons = $this->getDoctrine()->getRepository(Person::class);
+
+		$student = $persons->find($request->get('student_id'));
+		if ($student == null) {
+			return $this->json(['message' => 'student with given id is not found.'], Response::HTTP_BAD_REQUEST);
+		}
+
+		$teacher = $persons->find($request->get('teacher_id'));
+		if ($teacher == null) {
+			return $this->json(['message' => 'teacher with given id is not found.'], Response::HTTP_BAD_REQUEST);
+		}
 
 		$lab = new Lab();
 		$lab->setName($request->request->get('name'));
 		$lab->setMark($request->get('mark'));
-		$lab->setStudent($request->get('student'));
-		$lab->setTeacher($request->get('teacher'));
+		$lab->setStudent($student);
+		$lab->setTeacher($teacher);
 
 		$entityManager->persist($lab);
 		$entityManager->flush();
@@ -49,14 +84,14 @@ class LabsController extends AbstractController
 	}
 
 	/**
-	 * Route("/labs/{id}", name="delete_lab", methods={"DELETE"})
+	 * @Route("/labs/{id}", name="delete_lab", methods={"DELETE"})
 	 */
-	public function remove(int $id, Request $request): Response
+	public function remove(int $id): Response
 	{
 		$lab = $this->getDoctrine()->getRepository(Lab::class)->find($id);
 
 		if ($lab == null)  {
-			return $this->json(["message" => "Object with given attributes doesn't exist"], Response::HTTP_BAD_REQUEST);
+			return $this->json(["message" => "Object with given attributes does not exist"], Response::HTTP_BAD_REQUEST);
 
 		}
 
