@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Person;
+use App\Message\PersonMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class PersonController extends AbstractController
 {
@@ -113,5 +115,16 @@ class PersonController extends AbstractController
 
 		return $this->json([], Response::HTTP_NO_CONTENT);
 	}
+
+	/**
+	 * @Route("/dispatch", methods={"POST"})
+	 */
+	public function sendToQueue(MessageBusInterface $bus): Response
+	{
+		$bus->dispatch(new PersonMessage("Hello", "World", "Some"));
+
+		return $this->json([], Response::HTTP_OK);
+	}
+
 
 }

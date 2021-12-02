@@ -5,8 +5,11 @@ RUN  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &
      php -r "unlink('composer-setup.php');" && \
      mv composer.phar /usr/local/bin/composer
 RUN set -ex && \
-    apk --no-cache add postgresql-dev
+    apk --no-cache --update add postgresql-dev \
+                       rabbitmq-c rabbitmq-c-dev \
+                       --virtual .phpize-deps $PHPIZE_DEPS
 RUN docker-php-ext-install pdo pdo_pgsql
+RUN pecl install -o -f amqp && docker-php-ext-enable amqp && apk del .phpize-deps
 COPY . /app
 WORKDIR /app
 RUN composer install

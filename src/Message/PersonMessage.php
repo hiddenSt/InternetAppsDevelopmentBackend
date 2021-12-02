@@ -7,16 +7,13 @@ class PersonMessage
 	private $firstName;
 	private $secondName;
 	private $gender;
-	
 
-	public function __construct(int $personId)
+	public function __construct(string $firstName, string $secondName, string $gender)
 	{
-		$this->personId = $personId;
+		$this->firstName = $firstName;
+		$this->secondName = $secondName;
+		$this->gender = $gender;
 	}
 
-	public function getPersonId(): int
-	{
-		return $this->personId;
-	}
 
 }
