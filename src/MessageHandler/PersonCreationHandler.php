@@ -18,9 +18,13 @@ class PersonCreationHandler implements MessageHandlerInterface
 
 	public function __invoke(PersonMessage $personMessage)
 	{
-		$personManager = $this->entityManager_->getRepository(Person::class);
+		$person = new Person();
+		$person->setFirstName($personMessage->getFirstName());
+		$person->setSecondName($personMessage->getSecondName());
+		$person->setGender($personMessage->getGender());
 
-
+		$this->entityManager_->persist($person);
+		$this->entityManager_->flush();
 	}
 
 }

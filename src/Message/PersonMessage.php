@@ -15,5 +15,21 @@ class PersonMessage
 		$this->gender = $gender;
 	}
 
+	public function getFirstName(): string
+	{
+		return $this->firstName;
+	}
+
+	public function getSecondName(): string
+	{
+		return $this->secondName;
+	}
+
+	public function getGender(): string
+	{
+		return $this->gender;
+	}
+
+
 
 }
