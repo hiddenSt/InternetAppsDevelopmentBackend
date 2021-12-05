@@ -68,7 +68,7 @@ class PersonController extends AbstractController
 	/**
 	 * @Route("/person/{id}", methods={"PUT"})
 	 */
-	public function update(int $id, Request $request)
+	public function update(int $id, Request $request): Response
 	{
 		$person = $this->getDoctrine()->getRepository(Person::class)->find($id);
 
@@ -103,7 +103,7 @@ class PersonController extends AbstractController
 	/**
 	 * @Route("/person/{id}", methods={"DELETE"})
 	 */
-	public function remove(int $id, Request $request)
+	public function remove(int $id, Request $request): Response
 	{
 		$person = $this->getDoctrine()->getRepository(Person::class)->find($id);
 

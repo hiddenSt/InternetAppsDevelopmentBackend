@@ -86,7 +86,43 @@ class LabsController extends AbstractController
 	*/
 	public function update(int $id, Request $request): Response
 	{
-		return $this->json(["name" => "Hello world"]);
+		$lab = $this->getDoctrine()->getRepository(Lab::class)->find($id);
+
+		if (!$lab) {
+			return $this->json(["message" => "Object with given attributes does not exist"], Response::HTTP_BAD_REQUEST);
+		}
+
+		if ($request->request->get('name')) {
+			$lab->setName($request->request->get('name'));
+		}
+
+		if ($request->request->get('student_id')) {
+			$student = $this->getDoctrine()->getRepository(Person::class)->find($request->request->get('student_id'));
+
+			if (!$student) {
+				return $this->json(["message" => "Can not fine student with given id"], Response::HTTP_BAD_REQUEST);
+			}
+
+			$lab->setStudent($student);
+		}
+
+		if ($request->request->get('teacher_id')) {
+			$teacher = $this->getDoctrine()->getRepository(Person::class)->find($request->request->get('teacher_id'));
+
+			if (!$teacher) {
+				return $this->json(["message" => "Can not fine teacher with given id"], Response::HTTP_BAD_REQUEST);
+			}
+
+			$lab->setStudent($teacher);
+		}
+
+		$this->getDoctrine()->getManager()->flush();
+
+		return $this->json(['id' => $lab->getId(),
+			'name' => $lab->getName(),
+			'mark' => $lab->getMark(),
+			'teacher_id' => $lab->getTeacher()->getId(),
+			'student_id' => $lab->getStudent()->getId()], Response::HTTP_OK);
 	}
 
 	/**
@@ -98,7 +134,6 @@ class LabsController extends AbstractController
 
 		if ($lab == null)  {
 			return $this->json(["message" => "Object with given attributes does not exist"], Response::HTTP_BAD_REQUEST);
-
 		}
 
 		$this->getDoctrine()->getManager()->remove($lab);
