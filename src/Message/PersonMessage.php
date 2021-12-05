@@ -30,6 +30,4 @@ class PersonMessage
 		return $this->gender;
 	}
 
-
-
 }
