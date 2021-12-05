@@ -9,7 +9,8 @@ RUN set -ex && \
                        rabbitmq-c rabbitmq-c-dev \
                        --virtual .phpize-deps $PHPIZE_DEPS
 RUN docker-php-ext-install pdo pdo_pgsql
-RUN pecl install -o -f amqp && docker-php-ext-enable amqp && apk del .phpize-deps
+RUN pecl install -o -f amqp
+RUN docker-php-ext-enable amqp
 COPY . /app
 WORKDIR /app
 RUN composer install

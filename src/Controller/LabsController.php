@@ -72,7 +72,13 @@ class LabsController extends AbstractController
 		$entityManager->persist($lab);
 		$entityManager->flush();
 
-		return $this->json($lab, Response::HTTP_CREATED);
+		return $this->json([
+			'id' => $lab->getId(),
+			'name' => $lab->getName(),
+			'mark' => $lab->getMark(),
+			'teacher_id' => $lab->getTeacher()->getId(),
+			'student_id' => $lab->getStudent()->getId()
+		], Response::HTTP_CREATED);
 	}
 
 	/**
@@ -96,6 +102,7 @@ class LabsController extends AbstractController
 		}
 
 		$this->getDoctrine()->getManager()->remove($lab);
+		$this->getDoctrine()->getManager()->flush();
 
 		return $this->json([], Response::HTTP_NO_CONTENT);
 	}

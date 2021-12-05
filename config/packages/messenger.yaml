@@ -4,11 +4,19 @@ framework:
         # failure_transport: failed
 
         transports:
+
             # https://symfony.com/doc/current/messenger.html#transport-configuration
-            async: '%env(MESSENGER_TRANSPORT_DSN)%'
+            person_creation_amqp:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: person_creation
+                        type: fanout
+                    queues:
+                        person_creation: ~
             # failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
 
         routing:
             # Route your messages to the transports
-            'App\Message\PersonMessage': async
+            'App\Message\PersonMessage': person_creation_amqp

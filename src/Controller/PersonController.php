@@ -112,6 +112,7 @@ class PersonController extends AbstractController
 		}
 
 		$this->getDoctrine()->getManager()->remove($person);
+		$this->getDoctrine()->getManager()->flush();
 
 		return $this->json([], Response::HTTP_NO_CONTENT);
 	}
