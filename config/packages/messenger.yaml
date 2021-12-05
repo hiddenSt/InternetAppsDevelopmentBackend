@@ -8,12 +8,12 @@ framework:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
             person_creation_amqp:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-                options:
-                    exchange:
-                        name: person_creation
-                        type: fanout
-                    queues:
-                        person_creation: ~
+                # options:
+                #    exchange:
+                #        name: person_creation
+                #        type: fanout
+                #    queues:
+                #        person_creation: ~
             # failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
 
