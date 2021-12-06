@@ -2,17 +2,24 @@
 
 namespace App\Message;
 
-class PersonMessage
+class PersonUpdateMessage
 {
+	private $id;
 	private $firstName;
 	private $secondName;
 	private $gender;
 
-	public function __construct(string $firstName, string $secondName, string $gender)
+	public function __construct(int $id, string $firstName, string $secondName, string $gender)
 	{
+		$this->id = $id;
 		$this->firstName = $firstName;
 		$this->secondName = $secondName;
 		$this->gender = $gender;
+	}
+
+	public function getId(): int
+	{
+		return $this->id;
 	}
 
 	public function getFirstName(): string
@@ -29,5 +36,4 @@ class PersonMessage
 	{
 		return $this->gender;
 	}
-
 }

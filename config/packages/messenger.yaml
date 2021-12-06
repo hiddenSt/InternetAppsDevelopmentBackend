@@ -6,17 +6,65 @@ framework:
         transports:
 
             # https://symfony.com/doc/current/messenger.html#transport-configuration
-            person_creation_amqp:
+            person_add_amqp:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
                     exchange:
-                        name: person_creation
+                        name: person_add
                         type: fanout
                     queues:
-                        person_creation: ~
-            # failed: 'doctrine://default?queue_name=failed'
-            # sync: 'sync://'
+                        person_add_q: ~
+
+            person_update_amqp:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: person_update
+                        type: fanout
+                    queues:
+                        person_update_q: ~
+
+            person_remove_amqp:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: person_remove
+                        type: fanout
+                    queues:
+                        person_remove_q: ~
+
+            lab_add_amqp:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: lab_add
+                        type: fanout
+                    queues:
+                        lab_add_q: ~
+
+            lab_update_amqp:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: lab_update
+                        type: fanout
+                    queues:
+                        lab_update_q: ~
+
+            lab_remove_amqp:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: lab_remove
+                        type: fanout
+                    queues:
+                        lab_remove_q: ~
+
 
         routing:
-            # Route your messages to the transports
-            'App\Message\PersonMessage': person_creation_amqp
+            'App\Message\PersonAddMessage': person_add_amqp
+            'App\Message\PersonUpdateMessage': person_update_amqp
+            'App\Message\PersonRemoveMessage': person_remove_amqp
+            'App\Message\LabAddMessage': lab_add_amqp
+            'App\Message\LabUpdateMessage': lab_update_amqp
+            'App\Message\LabRemoveMessage': lab_remove_amqp

@@ -2,7 +2,7 @@
 
 namespace App\MessageHandler;
 
-use App\Message\PersonMessage;
+use App\Message\PersonAddMessage;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use App\Entity\Person;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +16,7 @@ class PersonCreationHandler implements MessageHandlerInterface
 		$this->entityManager_ = $manager;
 	}
 
-	public function __invoke(PersonMessage $personMessage)
+	public function __invoke(PersonAddMessage $personMessage)
 	{
 		$person = new Person();
 		$person->setFirstName($personMessage->getFirstName());

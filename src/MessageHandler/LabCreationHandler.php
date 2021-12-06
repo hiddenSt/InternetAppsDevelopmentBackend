@@ -3,7 +3,7 @@
 namespace App\MessageHandler;
 
 use App\Entity\Person;
-use App\Message\LabMessage;
+use App\Message\LabAddMessage;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use App\Entity\Lab;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +17,7 @@ class LabCreationHandler implements MessageHandlerInterface
 		$this->entityManager_ = $manager;
 	}
 
-	public function __invoke(LabMessage $labMessage)
+	public function __invoke(LabAddMessage $labMessage)
 	{
 		$teacher = $this->entityManager_->getRepository(Person::class)->find($labMessage->getTeacherId());
 		$student = $this->entityManager_->getRepository(Person::class)->find($labMessage->getStudentId());

@@ -2,7 +2,7 @@
 
 namespace App\Message;
 
-class LabMessage
+class LabAddMessage
 {
 	private $name;
 	private $mark;
