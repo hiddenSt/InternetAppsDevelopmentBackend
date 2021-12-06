@@ -22,7 +22,6 @@ class PersonRemoveHandler implements MessageHandlerInterface
 
 		$this->entityManager_->remove($person);
 
-		$this->entityManager_->persist($person);
 		$this->entityManager_->flush();
 	}
 

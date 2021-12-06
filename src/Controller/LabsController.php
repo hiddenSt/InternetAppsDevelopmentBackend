@@ -22,7 +22,21 @@ class LabsController extends AbstractController
 		$labs_arr = [];
 
 		foreach ($labs as $lab) {
-			$lab = ['id' => $lab->getId(), 'name' => $lab->getName(), 'mark' => $lab->getMark()];
+			$teacher = ['id' => $lab->getTeacher()->getId(),
+						'first_name' => $lab->getTeacher()->getFirstName(),
+						'second_name' => $lab->getTeacher()->getSecondName()];
+
+			$student = [
+				'id' => $lab->getStudent()->getId(),
+				'first_name' => $lab->getStudent()->getFirstName(),
+				'second_name' => $lab->getStudent()->getSecondName()];
+
+			$lab = [
+				'id' => $lab->getId(),
+				'name' => $lab->getName(),
+				'mark' => $lab->getMark(),
+				'teacher' => $teacher,
+				'student' => $student];
 			array_push($labs_arr, $lab);
 		}
 
@@ -92,34 +106,31 @@ class LabsController extends AbstractController
 			return $this->json(["message" => "Object with given attributes does not exist"], Response::HTTP_BAD_REQUEST);
 		}
 
-		if ($request->request->get('name')) {
-			$lab->setName($request->request->get('name'));
+		$decodedRequest = json_decode($request->getContent());
+
+		/* $student = $this->getDoctrine()->getRepository(Person::class)->find($decodedRequest->student_id);
+
+		if (!$student) {
+			return $this->json(["message" => "Can not fine student with given id"], Response::HTTP_BAD_REQUEST);
 		}
 
-		if ($request->request->get('student_id')) {
-			$student = $this->getDoctrine()->getRepository(Person::class)->find($request->request->get('student_id'));
+		$teacher = $this->getDoctrine()->getRepository(Person::class)->find($decodedRequest->teacher_id);
 
-			if (!$student) {
-				return $this->json(["message" => "Can not fine student with given id"], Response::HTTP_BAD_REQUEST);
-			}
-
-			$lab->setStudent($student);
+		if (!$teacher) {
+			return $this->json(["message" => "Can not fine teacher with given id"], Response::HTTP_BAD_REQUEST);
 		}
 
-		if ($request->request->get('teacher_id')) {
-			$teacher = $this->getDoctrine()->getRepository(Person::class)->find($request->request->get('teacher_id'));
+		*/
 
-			if (!$teacher) {
-				return $this->json(["message" => "Can not fine teacher with given id"], Response::HTTP_BAD_REQUEST);
-			}
-
-			$lab->setStudent($teacher);
-		}
+		// $lab->setStudent($student);
+		// $lab->setTeacher($teacher);
+		// $lab->setName($decodedRequest->name);
+		// $lab->setMark($decodedRequest->mark);
 
 		$this->getDoctrine()->getManager()->flush();
 
 		return $this->json(['id' => $lab->getId(),
-			'name' => $lab->getName(),
+			'name' => 'Hello_world',
 			'mark' => $lab->getMark(),
 			'teacher_id' => $lab->getTeacher()->getId(),
 			'student_id' => $lab->getStudent()->getId()], Response::HTTP_OK);

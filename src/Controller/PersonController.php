@@ -24,7 +24,7 @@ class PersonController extends AbstractController
 		$persons_arr = [];
 
 		foreach ($persons as $person) {
-			$array_record = ['first_name' => $person->getFirstName(), 'second_name' => $person->getSecondName(), 'gender' => $person->getGender()];
+			$array_record = ['id'=> $person->getId(), 'first_name' => $person->getFirstName(), 'second_name' => $person->getSecondName(), 'gender' => $person->getGender()];
 			array_push($persons_arr, $array_record);
 		}
 
@@ -94,7 +94,7 @@ class PersonController extends AbstractController
 
 		return $this->json([
 			'id' => $person->getId(),
-			'first_name' => $person->getFirstName(),
+			'first_name' => 'Somecoolname',
 			'second_name' => $person->getSecondName(),
 			'gender' => $person->getGender()
 		], Response::HTTP_OK);
@@ -118,13 +118,14 @@ class PersonController extends AbstractController
 	}
 
 	/**
-	 * @Route("/dispatch", methods={"POST"})
+	 * @Route("/top_marks", methods={"GET"})
 	 */
 	public function sendToQueue(MessageBusInterface $bus): Response
 	{
-		$bus->dispatch(new PersonAddMessage("Hello", "World", "Some"));
-
-		return $this->json([], Response::HTTP_OK);
+		return $this->json(['id' => '5',
+			'first_name' => 'SomeSecondname',
+			'second_name' => 'HelloWolrd',
+			'gender' => 'female'], Response::HTTP_OK);
 	}
 
 

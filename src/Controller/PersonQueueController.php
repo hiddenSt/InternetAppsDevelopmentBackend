@@ -52,12 +52,11 @@ class PersonQueueController extends AbstractController
 	}
 
 	/**
-	 * @Route("/person/dispatch", name="person_queue_remove", methods={"DELETE"})
+	 * @Route("/person/dispatch/{id}", name="person_queue_remove", methods={"DELETE"})
 	 */
-	public function dispatchRemoveToQueue(Request $request): Response
+	public function dispatchRemoveToQueue(int $id): Response
 	{
-		$this->bus_->dispatch(new PersonRemoveMessage(
-			$request->request->get('id')));
+		$this->bus_->dispatch(new PersonRemoveMessage($id));
 
 		return $this->json([
 			'message' => 'Remove Person is send to queue',
