@@ -21,7 +21,7 @@ class LabRemoveHandler implements MessageHandlerInterface
 		$lab = $this->entityManager_->getRepository(Lab::class)->find($labMessage->getId());
 
 		$this->entityManager_->remove($lab);
-		
+
 		$this->entityManager_->flush();
 	}
 
