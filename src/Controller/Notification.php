@@ -30,12 +30,10 @@ class Notification implements MessageComponentInterface
 		$decodedMessage = json_decode($msg);
 
 		if ($decodedMessage->object_type == "Person") {
-			$this->managePerson($decodedMessage);
+			$this->managePerson($decodedMessage, $from);
 		} else if ($decodedMessage->object_type == "Lab") {
-			$this->manageLab($decodedMessage);
+			$this->manageLab($decodedMessage, $from);
 		}
-
-		$from->send("Complete!");
 
 	}
 
@@ -49,13 +47,24 @@ class Notification implements MessageComponentInterface
 		$conn->close();
 	}
 
-	public function manageLab($msg)
+	public function manageLab($msg, $from)
 	{
 		if ($msg->operation == "add") {
 			$lab = new Lab;
 
 			$student = $this->manager->getRepository(Person::class)->find($msg->student_id);
 			$teacher = $this->manager->getRepository(Person::class)->find($msg->teacher_id);
+
+			if (!$student) {
+				$message = ['error' => 'student with given id does not exist'];
+				$from->send(json_encode($message));
+			}
+
+			if (!$teacher) {
+				$message = ['error' => 'teacher with given id does not exist'];
+				$from->send(json_encode($message));
+			}
+
 			$lab->setName($msg->name);
 			$lab->setMark($msg->mark);
 			$lab->setTeacher($teacher);
@@ -63,15 +72,53 @@ class Notification implements MessageComponentInterface
 
 			$this->manager->persist($lab);
 			$this->manager->flush();
+
+			$studentMessage = [
+				'id' => $student->getId(),
+				'first_name' => $student->getFirstName(),
+				'second_name' => $student->getSecondName(),
+				'gender' => $student->getGender()
+			];
+
+			$teacherMessage = [
+				'id' => $student->getId(),
+				'first_name' => $student->getFirstName(),
+				'second_name' => $student->getSecondName(),
+				'gender' => $student->getGender()
+			];
+
+			$message = [
+				'id' => $lab->getId(),
+				'name' => $lab->getName(),
+				'mark' => $lab->getMark(),
+				'student' => $studentMessage,
+				'teacher'=> $teacherMessage
+			];
+
+			$from->send(json_encode($message));
+
 		} else if ($msg->operation == "update") {
 			$lab = $this->manager->getRepository(Lab::class)->find($msg->id);
 
 			if (!$lab) {
+				$message = ['error' => 'lab with given id does not exist'];
+				$from->send(json_encode($message));
 				return;
 			}
 
 			$student = $this->manager->getRepository(Person::class)->find($msg->student_id);
 			$teacher = $this->manager->getRepository(Person::class)->find($msg->teacher_id);
+
+			if (!$student) {
+				$message = ['error' => 'student with given id does not exist'];
+				$from->send(json_encode($message));
+			}
+
+			if (!$teacher) {
+				$message = ['error' => 'teacher with given id does not exist'];
+				$from->send(json_encode($message));
+			}
+
 			$lab->setName($msg->name);
 			$lab->setMark($msg->mark);
 			$lab->setTeacher($teacher);
@@ -79,10 +126,36 @@ class Notification implements MessageComponentInterface
 
 			$this->manager->persist($lab);
 			$this->manager->flush();
+
+			$studentMessage = [
+				'id' => $student->getId(),
+				'first_name' => $student->getFirstName(),
+				'second_name' => $student->getSecondName(),
+				'gender' => $student->getGender()
+			];
+
+			$teacherMessage = [
+				'id' => $student->getId(),
+				'first_name' => $student->getFirstName(),
+				'second_name' => $student->getSecondName(),
+				'gender' => $student->getGender()
+			];
+
+			$message = [
+				'id' => $lab->getId(),
+				'name' => $lab->getName(),
+				'mark' => $lab->getMark(),
+				'student' => $studentMessage,
+				'teacher'=> $teacherMessage
+			];
+
+			$from->send(json_encode($message));
 		} else if ($msg->operation == "remove") {
 			$lab = $this->manager->getRepository(Lab::class)->find($msg->id);
 
 			if (!$lab) {
+				$message = ['error' => 'lab with given id does not exist'];
+				$from->send(json_encode($message));
 				return;
 			}
 
@@ -91,7 +164,7 @@ class Notification implements MessageComponentInterface
 		}
 	}
 
-	public function managePerson($msg)
+	public function managePerson($msg, $from)
 	{
 		if ($msg->operation == "add") {
 			$person = new Person;
@@ -102,10 +175,21 @@ class Notification implements MessageComponentInterface
 
 			$this->manager->persist($person);
 			$this->manager->flush();
+
+			$message = [
+				'id' => $person->getId(),
+				'first_name' => $person->getFirstName(),
+				'second_name' => $person->getSecondName(),
+				'gender' => $person->getGender()];
+
+			$from->send(json_encode($message));
+
 		} else if ($msg->operation == "update") {
 			$person = $this->manager->getRepository(Person::class)->find($msg->id);
 
 			if (!$person) {
+				$message = ['error' => 'person with given id does not exist'];
+				$from->send(json_encode($message));
 				return;
 			}
 
@@ -115,12 +199,24 @@ class Notification implements MessageComponentInterface
 
 			$this->manager->persist($person);
 			$this->manager->flush();
+
+			$message = [
+				'id' => $person->getId(),
+				'first_name' => $person->getFirstName(),
+				'second_name' => $person->getSecondName(),
+				'gender' => $person->getGender()];
+
+			$from->send(json_encode($message));
 		} else if ($msg->operation == "remove") {
 			$person = $this->manager->getRepository(Person::class)->find($msg->id);
 
 			if (!$person) {
+				$message = ['error' => 'person with given id does not exist'];
+				$from->send(json_encode($message));
 				return;
 			}
+
+
 
 			$this->manager->remove($person);
 			$this->manager->flush();

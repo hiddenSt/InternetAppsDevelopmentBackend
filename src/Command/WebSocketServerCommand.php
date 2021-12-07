@@ -29,10 +29,7 @@ class WebSocketServerCommand extends Command
 
 	protected function configure(): void
     {
-        $this
-            ->addArgument('port', InputArgument::REQUIRED, 'Port on witch')
-            // ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
+        $this->addArgument('port', InputArgument::REQUIRED, 'Port to listen on');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
