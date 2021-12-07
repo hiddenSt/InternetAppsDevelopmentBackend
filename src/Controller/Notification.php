@@ -35,6 +35,8 @@ class Notification implements MessageComponentInterface
 			$this->manageLab($decodedMessage);
 		}
 
+		$from->send("Complete!");
+
 	}
 
 	public function onClose(ConnectionInterface $conn)
