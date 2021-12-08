@@ -92,7 +92,7 @@ class Notification implements MessageComponentInterface
 				'name' => $lab->getName(),
 				'mark' => $lab->getMark(),
 				'student' => $studentMessage,
-				'teacher'=> $teacherMessage
+				'teacher' => $teacherMessage
 			];
 
 			$from->send(json_encode($message));
@@ -146,7 +146,7 @@ class Notification implements MessageComponentInterface
 				'name' => $lab->getName(),
 				'mark' => $lab->getMark(),
 				'student' => $studentMessage,
-				'teacher'=> $teacherMessage
+				'teacher' => $teacherMessage
 			];
 
 			$from->send(json_encode($message));
@@ -215,7 +215,6 @@ class Notification implements MessageComponentInterface
 				$from->send(json_encode($message));
 				return;
 			}
-
 
 
 			$this->manager->remove($person);

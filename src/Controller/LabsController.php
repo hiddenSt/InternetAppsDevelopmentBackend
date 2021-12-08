@@ -13,8 +13,8 @@ use App\Entity\Person;
 class LabsController extends AbstractController
 {
 	/**
-	* @Route("/labs", name="get_labs", methods={"GET"})
-	*/
+	 * @Route("/labs", name="get_labs", methods={"GET"})
+	 */
 	public function index(): Response
 	{
 		$labs = $this->getDoctrine()->getRepository(Lab::class)->findAll();
@@ -23,8 +23,8 @@ class LabsController extends AbstractController
 
 		foreach ($labs as $lab) {
 			$teacher = ['id' => $lab->getTeacher()->getId(),
-						'first_name' => $lab->getTeacher()->getFirstName(),
-						'second_name' => $lab->getTeacher()->getSecondName()];
+				'first_name' => $lab->getTeacher()->getFirstName(),
+				'second_name' => $lab->getTeacher()->getSecondName()];
 
 			$student = [
 				'id' => $lab->getStudent()->getId(),
@@ -43,9 +43,9 @@ class LabsController extends AbstractController
 		return $this->json($labs_arr, Response::HTTP_OK);
 	}
 
-	/** 
-	* @Route("/labs", name="create_lab", methods={"POST"})
-	*/
+	/**
+	 * @Route("/labs", name="create_lab", methods={"POST"})
+	 */
 	public function create(Request $request): Response
 	{
 		if (!$request->request->get('name')) {
@@ -96,8 +96,8 @@ class LabsController extends AbstractController
 	}
 
 	/**
-	* @Route("/labs/{id}", name="update_lab", methods={"PUT"})
-	*/
+	 * @Route("/labs/{id}", name="update_lab", methods={"PUT"})
+	 */
 	public function update(int $id, Request $request): Response
 	{
 		$lab = $this->getDoctrine()->getRepository(Lab::class)->find($id);
@@ -143,7 +143,7 @@ class LabsController extends AbstractController
 	{
 		$lab = $this->getDoctrine()->getRepository(Lab::class)->find($id);
 
-		if ($lab == null)  {
+		if ($lab == null) {
 			return $this->json(["message" => "Object with given attributes does not exist"], Response::HTTP_BAD_REQUEST);
 		}
 

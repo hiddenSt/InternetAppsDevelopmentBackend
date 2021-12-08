@@ -20,21 +20,21 @@ class LabQueueController extends AbstractController
 		$this->bus_ = $bus;
 	}
 
-    /**
-     * @Route("/lab/dispatch", name="lab_queue_add", methods={"POST"})
-     */
-    public function dispatchAddToQueue(Request $request): Response
-    {
+	/**
+	 * @Route("/lab/dispatch", name="lab_queue_add", methods={"POST"})
+	 */
+	public function dispatchAddToQueue(Request $request): Response
+	{
 		$this->bus_->dispatch(new LabAddMessage(
 			$request->request->get('name'),
 			$request->request->get('mark'),
 			$request->request->get('teacher_id'),
 			$request->request->get('student_id')));
 
-        return $this->json([
-            'message' => 'Add Lab is send to queue',
-        ]);
-    }
+		return $this->json([
+			'message' => 'Add Lab is send to queue',
+		]);
+	}
 
 	/**
 	 * @Route("/lab/dispatch", name="lab_queue_update", methods={"PUT"})

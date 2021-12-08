@@ -24,7 +24,7 @@ class PersonController extends AbstractController
 		$persons_arr = [];
 
 		foreach ($persons as $person) {
-			$array_record = ['id'=> $person->getId(), 'first_name' => $person->getFirstName(), 'second_name' => $person->getSecondName(), 'gender' => $person->getGender()];
+			$array_record = ['id' => $person->getId(), 'first_name' => $person->getFirstName(), 'second_name' => $person->getSecondName(), 'gender' => $person->getGender()];
 			array_push($persons_arr, $array_record);
 		}
 
@@ -62,7 +62,7 @@ class PersonController extends AbstractController
 			'first_name' => $new_person->getFirstName(),
 			'second_name' => $new_person->getSecondName(),
 			'gender' => $new_person->getGender()
- 		], Response::HTTP_CREATED);
+		], Response::HTTP_CREATED);
 	}
 
 	/**

@@ -17,8 +17,8 @@ use Ratchet\WebSocket\WsServer;
 
 class WebSocketServerCommand extends Command
 {
-    protected static $defaultName = 'web-socket-server';
-    protected static $defaultDescription = 'Add a short description for your command';
+	protected static $defaultName = 'web-socket-server';
+	protected static $defaultDescription = 'Add a short description for your command';
 	private $manager;
 
 	public function __construct(EntityManagerInterface $manager)
@@ -28,12 +28,12 @@ class WebSocketServerCommand extends Command
 	}
 
 	protected function configure(): void
-    {
-        $this->addArgument('port', InputArgument::REQUIRED, 'Port to listen on');
-    }
+	{
+		$this->addArgument('port', InputArgument::REQUIRED, 'Port to listen on');
+	}
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
+	protected function execute(InputInterface $input, OutputInterface $output): int
+	{
 		$server = IoServer::factory(new HttpServer(
 			new WsServer(
 				new Notification($this->manager)
@@ -43,6 +43,6 @@ class WebSocketServerCommand extends Command
 		$output->writeln("WebSocketServerIsStarted");
 		$server->run();
 
-        return Command::SUCCESS;
-    }
+		return Command::SUCCESS;
+	}
 }
